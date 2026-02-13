@@ -12,9 +12,9 @@ description: 直近24時間のエンジニアリング領域トレンドを検�
 ## Defaults
 
 - プラットフォーム: X(Twitter)
-- 時間窓: 24時間
+- 時間窓: 48時間
 - ロケール: ja（日本語圏優先、海外の重要ニュースも拾う）
-- 検索領域: 5カテゴリ（後述）
+- 検索領域: 4カテゴリ（後述）
 
 ## When To Use
 
@@ -25,17 +25,16 @@ description: 直近24時間のエンジニアリング領域トレンドを検�
 ## Workflow
 
 1. `npx tsx scripts/grok_trend_scout.ts` を実行
-2. 5カテゴリのトレンドと「今日の空気」を取得
+2. 4カテゴリのトレンドと「今日の空気」を取得
 3. 深掘り候補から1テーマを選ぶ（人間判断）
 4. → `x-deep-research` へ渡す
 
 ## Search Categories
 
-1. AI Coding Tools（Claude Code, Cursor, Copilot, Windsurf, Devin）
+1. AI Coding Tools（Claude Code, Cursor, Copilot, Windsurf）
 2. AI Agent / MCP / 自動化
-3. LLM / AIモデル動向（新モデル, ベンチマーク, API価格, 規約変更）
-4. エンジニアキャリア / 組織 / 働き方
-5. 海外発の新リリース / アナウンス（エンジニアリング関連）
+3. LLM / AIモデル動向（新モデル, API変更, 価格改定）
+4. Next.js / React / フロントエンド
 
 ## CLI
 

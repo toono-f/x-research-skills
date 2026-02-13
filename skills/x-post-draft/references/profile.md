@@ -7,6 +7,18 @@
 - TypeScript / Next.js（Webフロントエンド中心）
 - AI / LLM / Agent（Claude Code, MCP, AIエージェント活用）
 
+## 興味があるテーマ（優先度順）
+1. AI Coding Tools: Claude Code, Cursor, GitHub Copilot の実践的な使い方・新機能
+2. AI Agent / MCP: MCPサーバー構築、エージェント開発、自動化ワークフロー
+3. LLM 新モデル / API: Claude, GPT, Gemini 等の新モデルリリース、API変更、価格改定
+4. Next.js / React: Next.js の新バージョン、React の新機能、フロントエンド開発体験
+
+## 興味がないテーマ（除外対象）
+- 自分が使わないインフラ・プラットフォーム（Cloudflare Workers AI, Deno Deploy 等）
+- 自分が使わないフレームワーク/ライブラリ（TanStack, Svelte, Vue 等）
+- ハードウェア、ゲーム開発、物理シミュレーション
+- 投資・金融関連
+
 ## 発信のトンマナ
 - わかりやすく親しみやすい
 - 「試してみたんだけど」「やってみたらこうだった」系の実体験ベース
