@@ -20,9 +20,13 @@
        ↓
   x-deep-research（5分）→ ファクトと論点を揃える
        ↓
-  x-post-draft（1分）→ 投稿案3パターン
-       ↓
-  自分の言葉で仕上げて投稿（人間作業）
+       ├→ x-post-draft（1分）→ X投稿案3パターン
+       │       ↓
+       │   自分の言葉で仕上げてXに投稿（人間作業）
+       │
+       └→ x-article-draft（3分）→ Zenn記事ドラフト
+               ↓
+           自分の言葉で仕上げてZennに公開（人間作業）
 ```
 
 既存の `article-agent-context-research`（記事のための材料集め）とは目的が異なる。
@@ -221,11 +225,17 @@ Skill 1 が動けば毎日使い始められる。Skill 2・3 は使いながら
 2. `skills/x-post-draft/SKILL.md` を作成（Claude Code スキルとして）
 3. 投稿案の品質を検証、プロンプト調整
 
+### Phase 3.5: Skill 4（x-article-draft）
+
+1. `skills/x-article-draft/SKILL.md` を作成（Claude Code スキルとして）
+2. Zenn CLI 互換フロントマター付き markdown を出力
+3. deep-research → article-draft の連携を確認
+
 ### Phase 4: 運用最適化
 
 - 検索領域のカスタマイズ（盛り上がりに応じて入れ替え）
 - コスト実績の確認と最適化
-- 反響の大きかったテーマを Zenn 記事に昇格させるフロー検討
+- X投稿 → 反響確認 → Zenn記事昇格のフロー運用
 
 ---
 
@@ -256,12 +266,15 @@ x-research-skills/
     x-post-draft/
       SKILL.md
       references/
-        profile.md
+        profile.md         ← x-article-draft と共有
+    x-article-draft/
+      SKILL.md
   data/
     context-research/   ← 既存
     trend-scout/        ← Skill 1 出力
     deep-research/      ← Skill 2 出力
     post-draft/         ← Skill 3 出力
+    article-draft/      ← Skill 4 出力
   docs/
     skill-development-plan.md  ← 本ドキュメント
 ```
@@ -273,5 +286,3 @@ x-research-skills/
 - [ ] xAI API のコスト見積もり（毎日 Skill 1 + Skill 2 を回した場合の月額）
 - [ ] 検索領域の5カテゴリは固定か、設定ファイルで切り替えるか
 - [ ] Skill 1 の並列検索への切り替え判断基準
-- [ ] profile.md の初期内容
-- [ ] Zenn 記事への昇格フローの詳細（Phase 4）
