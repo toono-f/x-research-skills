@@ -1,0 +1,4 @@
+interface:
+  display_name: "トレンド検知"
+  short_description: "直近24時間のエンジニアリング領域トレンドを検知し、今日の空気を把握する"
+  default_prompt: "$x-trend-scout を使って、直近24時間のエンジニアリング領域トレンドを取得して（data/trend-scoutに保存）。"

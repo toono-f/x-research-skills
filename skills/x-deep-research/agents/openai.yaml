@@ -1,0 +1,4 @@
+interface:
+  display_name: "深掘りリサーチ"
+  short_description: "選んだテーマを投稿できるレベルまで深掘りし、ファクト・賛否・空白地帯を揃える"
+  default_prompt: "$x-deep-research を使って、指定テーマを深掘りして（data/deep-researchに保存）。まず「何を深掘りするか」を確認して。"

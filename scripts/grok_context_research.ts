@@ -13,54 +13,12 @@
  *   npx tsx scripts/grok_context_research.ts --topic "X API recent search rate limits" --locale global --audience engineer
  */
 
-import fs from "node:fs";
 import path from "node:path";
 import process from "node:process";
-import { fileURLToPath } from "node:url";
 
-type Json = null | boolean | number | string | Json[] | { [k: string]: Json };
-
-const DEFAULT_BASE_URL = "https://api.x.ai";
-const DEFAULT_MODEL = "grok-4-1-fast-reasoning";
-
-function repoRoot(): string {
-  const __filename = fileURLToPath(import.meta.url);
-  return path.resolve(path.dirname(__filename), "..");
-}
-
-function loadDotenv(dotenvPath: string): Record<string, string> {
-  if (!fs.existsSync(dotenvPath)) return {};
-  const out: Record<string, string> = {};
-  const lines = fs.readFileSync(dotenvPath, "utf8").split(/\r?\n/);
-  for (const raw of lines) {
-    const line = raw.trim();
-    if (!line || line.startsWith("#")) continue;
-    const eq = line.indexOf("=");
-    if (eq === -1) continue;
-    const k = line.slice(0, eq).trim();
-    let v = line.slice(eq + 1).trim();
-    if (!k) continue;
-    if (
-      (v.startsWith('"') && v.endsWith('"')) ||
-      (v.startsWith("'") && v.endsWith("'"))
-    ) {
-      v = v.slice(1, -1);
-    }
-    out[k] = v;
-  }
-  return out;
-}
-
-function timestampSlug(d: Date): string {
-  const iso = d.toISOString();
-  const y = iso.slice(0, 4);
-  const m = iso.slice(5, 7);
-  const day = iso.slice(8, 10);
-  const hh = iso.slice(11, 13);
-  const mm = iso.slice(14, 16);
-  const ss = iso.slice(17, 19);
-  return `${y}${m}${day}_${hh}${mm}${ss}Z`;
-}
+import { resolveXaiConfig } from "./lib/config.ts";
+import { type Json, xaiRequest } from "./lib/xai_client.ts";
+import { timestampSlug, saveFile } from "./lib/file_utils.ts";
 
 function parseArgs(argv: string[]) {
   const args = {
@@ -116,21 +74,6 @@ Options:
 
   if (!Number.isFinite(args.days) || args.days <= 0) args.days = 30;
   return args;
-}
-
-function getConfig(args: ReturnType<typeof parseArgs>) {
-  const dotenv = loadDotenv(path.join(repoRoot(), ".env"));
-  const getStr = (envKey: string, cliValue: string, fallback: string) =>
-    cliValue || process.env[envKey] || dotenv[envKey] || fallback;
-
-  const xai_api_key = getStr("XAI_API_KEY", args.xai_api_key, "");
-  const xai_base_url = getStr("XAI_BASE_URL", args.xai_base_url, DEFAULT_BASE_URL).replace(
-    /\/+$/,
-    "",
-  );
-  const xai_model = getStr("XAI_MODEL", args.xai_model, DEFAULT_MODEL);
-
-  return { xai_api_key, xai_base_url, xai_model };
 }
 
 function buildPrompt(input: {
@@ -196,69 +139,13 @@ function buildPrompt(input: {
 `;
 }
 
-async function postJson(
-  url: string,
-  headers: Record<string, string>,
-  payload: Json,
-  timeoutMs: number,
-): Promise<unknown> {
-  const ac = new AbortController();
-  const t = setTimeout(() => ac.abort(), timeoutMs);
-  try {
-    const res = await fetch(url, {
-      method: "POST",
-      headers,
-      body: JSON.stringify(payload),
-      signal: ac.signal,
-    });
-    const text = await res.text();
-    if (!res.ok) {
-      throw new Error(`HTTP ${res.status}: ${text.slice(0, 4000)}`);
-    }
-    return JSON.parse(text) as unknown;
-  } finally {
-    clearTimeout(t);
-  }
-}
-
-function extractText(resp: unknown): string {
-  if (resp && typeof resp === "object") {
-    const r = resp as { [k: string]: unknown };
-    const out = r["output"];
-    if (Array.isArray(out)) {
-      const parts: string[] = [];
-      for (const item of out) {
-        if (!item || typeof item !== "object") continue;
-        const content = (item as { [k: string]: unknown })["content"];
-        if (!Array.isArray(content)) continue;
-        for (const c of content) {
-          if (!c || typeof c !== "object") continue;
-          const t = (c as { [k: string]: unknown })["text"];
-          if (typeof t === "string" && t.trim()) parts.push(t);
-        }
-      }
-      if (parts.length) return parts.join("\n").trim();
-    }
-    for (const k of ["output_text", "text", "content"]) {
-      const v = r[k];
-      if (typeof v === "string" && v.trim()) return v.trim();
-    }
-  }
-  return JSON.stringify(resp, null, 2);
-}
-
-function saveFile(outDir: string, filename: string, content: string) {
-  const root = repoRoot();
-  const absDir = path.isAbsolute(outDir) ? outDir : path.join(root, outDir);
-  fs.mkdirSync(absDir, { recursive: true });
-  const p = path.join(absDir, filename);
-  fs.writeFileSync(p, content, "utf8");
-  return p;
-}
-
 async function main() {
   const args = parseArgs(process.argv.slice(2));
-  const cfg = getConfig(args);
+  const cfg = resolveXaiConfig({
+    xai_api_key: args.xai_api_key || undefined,
+    xai_base_url: args.xai_base_url || undefined,
+    xai_model: args.xai_model || undefined,
+  });
 
   if (!cfg.xai_api_key.trim()) {
     // eslint-disable-next-line no-console
@@ -293,17 +180,14 @@ async function main() {
     return;
   }
 
-  const url = `${cfg.xai_base_url}/v1/responses`;
-  const headers = {
-    "Content-Type": "application/json",
-    Authorization: `Bearer ${cfg.xai_api_key}`,
-  };
-
-  const resp = await postJson(url, headers, payload, 180_000);
-  const text = extractText(resp);
+  const { raw: resp, text } = await xaiRequest({
+    baseUrl: cfg.xai_base_url,
+    apiKey: cfg.xai_api_key,
+    model: cfg.xai_model,
+    prompt,
+  });
 
   const ts = timestampSlug(now);
-  // Primary artifact name aligns with skills requirement: YYYYMMDD_HHMMSSZ_context.md
   const base = `${ts}_${args.locale}_context`;
   const md = `# Context Pack (${args.locale})\n\n## Meta\n- Timestamp (UTC): ${now.toISOString()}\n- Topic: ${args.topic.trim()}\n- Audience: ${args.audience}\n\n---\n\n${text}\n`;
 
