@@ -97,7 +97,7 @@ function buildPrompt(input: {
 
   return `日本語で回答して。
 
-目的: Webアプリ開発者・AIツール活用者が「これ知っておきたい」と思う技術動向を直近${input.hours}時間から抽出する。
+目的: 日本語エンジニアコミュニティで直近${input.hours}時間にバズっている「実用的な」ポストを見つける。公式アナウンスではなく、エンジニアが実際に試して得た知見・Tips・体験談を重視する。
 時点: ${input.nowIso}
 
 前提:
@@ -112,81 +112,81 @@ function buildPrompt(input: {
 - Claude Code, Cursor 等のAIコーディングツールを日常的に使っている
 - MCP / AIエージェント / LLM API を使った開発に関心がある
 
-興味がある領域（これだけに絞ること）:
-1. AI Coding Tools: Claude Code, Cursor, GitHub Copilot, Windsurf の新機能・アップデート・使い方
-2. AI Agent / MCP: MCPサーバー、エージェント開発、自動化ワークフロー
-3. LLM 新モデル / API: Claude, GPT, Gemini 等の新モデル、API変更、価格改定
-4. Next.js / React: Next.js, React の新バージョン・新機能
+探すもの（優先度順）:
+1. 実用Tips・体験談: 「Claude Codeでこうやったら爆速になった」「Cursorのこの設定が便利」「MCP作ってみた」等、エンジニアが試して得た知見のバズポスト
+2. ツール活用法: AIコーディングツールやLLM APIの具体的な使い方・ワークフロー・プロンプト例
+3. 新機能の実体験レポート: 公式アナウンスそのものではなく「新機能を試してみた結果」の日本語ポスト
+4. 議論・比較: 「Claude Code vs Cursor」「AIコーディングの限界」等、エンジニアの間で盛り上がっている議論
 
-興味がない領域（絶対に含めないこと）:
-- 読者が使わないインフラ/プラットフォーム: Cloudflare Workers AI, Deno Deploy, AWS Lambda 等
-- 読者が使わないフレームワーク: TanStack, Svelte, Vue, Angular, SolidJS 等
-- ハードウェア、ゲーム開発、物理学、セキュリティ脆弱性速報
+探さないもの（絶対に含めないこと）:
+- 公式アカウントのアナウンスそのもの（それを試した人のポストはOK）
+- 仕様書・プロトコル策定の話（実装に落ちていないもの）
+- 読者が使わないインフラ/フレームワークの話（Cloudflare Workers, TanStack, Svelte等）
+- ハードウェア、ゲーム開発、物理学
 - 投資・金融関連
 
 検索戦略（この順番で検索すること）:
 
-ステップ1: AIコーディングツール公式
-以下のアカウント/キーワードで直近${input.hours}時間のポストを検索する:
-- @AnthropicAI, @claudescode, "Claude Code"
-- @cursor_ai, "Cursor update", "Cursor changelog"
-- @GitHubCopilot, "Copilot"
-- @OpenAI, "ChatGPT", "GPT-5", "GPT-4o"
-- @GoogleDeepMind, "Gemini"
+ステップ1: 日本語のバズポストを直接探す
+以下のキーワードで日本語ポストを検索し、いいね/RTが多いものを優先:
+- "Claude Code" lang:ja
+- "Cursor" ("便利" OR "設定" OR "使い方" OR "移行" OR "やばい") lang:ja
+- "MCP" ("作った" OR "作ってみた" OR "サーバー" OR "便利") lang:ja
+- "AIエージェント" OR "AIコーディング" lang:ja
+- "Copilot" ("使い分け" OR "比較") lang:ja
+- "ChatGPT" OR "GPT" ("プロンプト" OR "API" OR "開発") lang:ja
+- "Next.js" OR "React" ("Tips" OR "実装" OR "移行") lang:ja
 
-ステップ2: MCP / AIエージェント
-- "MCP server", "Model Context Protocol", "MCP tool"
-- "AI agent", "AIエージェント", "agent framework"
-- "Claude Code agent", "Cursor agent mode"
+ステップ2: 体験・Tips系ポストを探す
+- ("やってみた" OR "試してみた" OR "使ってみた") ("Claude Code" OR "Cursor" OR "MCP" OR "AI") lang:ja
+- ("便利すぎ" OR "神機能" OR "知らなかった" OR "これマジで") ("AI" OR "開発" OR "コーディング") lang:ja
+- ("プロンプト" OR "ワークフロー" OR "自動化") ("コツ" OR "テンプレ" OR "設定") lang:ja
+- Zenn/Qiitaで話題になっている上記テーマの記事への言及
 
-ステップ3: Next.js / React
-- @nextjs, "Next.js", "React"
-- "App Router", "Server Components", "Server Actions"
+ステップ3: 議論・比較系を探す
+- "Claude Code" ("vs" OR "比較" OR "使い分け" OR "乗り換え") lang:ja
+- "Cursor" ("vs" OR "比較" OR "やめた" OR "戻った") lang:ja
+- "AIコーディング" ("限界" OR "課題" OR "使えない" OR "使える") lang:ja
 
-ステップ4: 日本語エンジニアコミュニティ
-- 上記テーマに関するZenn/Qiitaトレンド記事への言及
-- 「Claude Code 使ってみた」「Cursor 移行した」「MCP 作った」系の実体験ポスト
-
-選定基準（すべて満たすこと）:
-- 【最重要】読者が実際に使う・使いそうな技術か？ Claude Code, Cursor, MCP, Next.js, React, LLM API に関連するもののみ。
-- 一次情報（公式ドキュメント/GitHub/リリースノート/Changelog）が確認できるか？
-- 読者が「知っておくべき」「試してみたい」と思えるレベルの変更か？
-- 該当トピックが少ない場合は「静かな期間」と正直に書く。水増ししない。
-- 迷ったら除外する。5個の的確なトピックは15個の曖昧なトピックより価値がある。
+選定基準:
+- 【最重要】読者が「これ参考になる」「試してみよう」と思える実用的な内容か？
+- 日本語ポストでバズっているか？（いいね50以上、RT10以上が目安。ただし内容が良ければ少なくてもOK）
+- 具体的なコード・設定・手順・体験が含まれているか？（抽象的な感想だけのポストは除外）
+- 該当が少ない場合は「静かな期間」と正直に書く。水増ししない。
 
 やること:
-1) 上記の検索戦略に従って x_search で情報収集する
-2) 重要度が高い順にトピックを最大${input.topN * input.categories.length}個まで抽出する（カテゴリは後付けでラベルする）
-3) 各トピックについて「エンジニアが知っておくべきこと」と「試せること」を整理する
-4) 一次情報URLの実在性を再確認する（URLが見つからないトピックは削除する）
+1) 上記の検索戦略に従って x_search で日本語バズポストを収集する
+2) バズ度（いいね/RT）× 実用度が高い順にトピックを最大${input.topN * input.categories.length}個まで抽出する
+3) 各トピックについて「何が参考になるか」と「自分でも試せること」を整理する
+4) 元ポストのURLを必ず含める
 
 出力形式（Markdown）:
 
 ## キャッチアップサマリー
-（直近${input.hours}時間でWebアプリ開発者・AIツール活用者が押さえておくべきポイントを3〜5行で。該当が少なければ「静かな期間」と正直に。）
+（直近${input.hours}時間で日本語エンジニアコミュニティで話題になっていた実用ネタを3〜5行で。該当が少なければ「静かな期間」と正直に。）
 
 ## 注目トピック
 
-（重要度順に並べる。カテゴリごとに分けず、フラットに重要度順。）
+（バズ度×実用度の高い順。フラットに並べる。）
 
-### 1. [何が起きたか（1行）]
-- カテゴリ: AI Coding Tools / AI Agent・MCP / LLM / Next.js・React
-- 重要度: 高 / 中
-- 何が変わったか: （技術的な変更点・新機能・仕様を具体的に）
-- エンジニアへの影響: （実務で何が変わるか、何に注意すべきか）
-- 試すなら: （最小の検証ステップ。コマンド、URL、設定例など）
-- 一次情報: URL（実在確認済み）
-- 参考ポスト: [ポストの要旨] — URL（あれば）
+### 1. [どんなTips/体験/議論か（1行）]
+- カテゴリ: AI Coding Tools / AI Agent・MCP / LLM活用 / Next.js・React
+- バズ度: いいね○○ / RT○○（わかる範囲で）
+- 内容: （何が共有されているか。具体的なコード・設定・手順があればそれも書く）
+- なぜ参考になるか: （読者にとっての実用的な価値）
+- 試すなら: （最小の検証ステップ）
+- 元ポスト: URL
+- 関連: 他の関連ポスト/記事のURL（あれば）
 
 ### 2. ...
 
 （最大${input.topN * input.categories.length}個。基準を満たすものがなければ少なくてよい。）
 
 ## 深掘り候補
-（技術記事・X投稿ネタとして特に有益なテーマを最大3つ。以下の条件をすべて満たすもののみ:
-- 公式ドキュメント/GitHubが充実していて深掘りできる
-- エンジニアが実際に手を動かして検証できる
-- 対象読者のスタック（TypeScript/AI/Web開発）と関連がある
+（記事ネタ・X投稿ネタとして特に有益なテーマを最大3つ。以下の条件をすべて満たすもののみ:
+- 日本語コミュニティで実際にバズっていて関心が高い
+- 自分でも手を動かして検証・体験記を書ける
+- 対象読者のスタック（TypeScript/AI/Web開発）と直接関連がある
 各テーマに「なぜ今書く価値があるか」「どの角度で書くと差別化できるか」を付記）
 `;
 }
