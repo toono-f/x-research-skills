@@ -21,3 +21,19 @@ export function saveFile(outDir: string, filename: string, content: string): str
   fs.writeFileSync(p, content, "utf8");
   return p;
 }
+
+/**
+ * Find the latest file in a directory matching a given extension.
+ * Returns the absolute path to the newest file, or null if no match is found.
+ */
+export function findLatestFile(dir: string, ext: string): string | null {
+  const root = repoRoot();
+  const absDir = path.isAbsolute(dir) ? dir : path.join(root, dir);
+  if (!fs.existsSync(absDir)) return null;
+  const files = fs.readdirSync(absDir)
+    .filter((f) => f.endsWith(ext))
+    .sort()
+    .reverse();
+  if (files.length === 0) return null;
+  return path.join(absDir, files[0]);
+}
