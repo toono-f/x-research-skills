@@ -249,32 +249,8 @@ async function main() {
 ${text}
 `;
 
-  const jsonFile = saveFile(args.out_dir, `${base}.json`, JSON.stringify(
-    {
-      timestamp: now.toISOString(),
-      params: {
-        locale: args.locale,
-        hours: args.hours,
-        categories: args.categories,
-        top_n: args.top_n,
-        model: cfg.xai_model,
-        base_url: cfg.xai_base_url,
-        out_dir: args.out_dir,
-      },
-      request: payload,
-      response: resp,
-      extracted_text: text,
-    },
-    null,
-    2,
-  ));
-  const txtFile = saveFile(args.out_dir, `${base}.txt`, text);
   const mdFile = saveFile(args.out_dir, `${base}.md`, md);
 
-  // eslint-disable-next-line no-console
-  console.error(`Saved: ${path.relative(process.cwd(), jsonFile)}`);
-  // eslint-disable-next-line no-console
-  console.error(`Saved: ${path.relative(process.cwd(), txtFile)}`);
   // eslint-disable-next-line no-console
   console.error(`Saved: ${path.relative(process.cwd(), mdFile)}`);
 

@@ -191,33 +191,8 @@ async function main() {
   const base = `${ts}_周辺リサーチ_${args.locale}`;
   const md = `# 周辺リサーチ (${args.locale})\n\n## Meta\n- Timestamp (UTC): ${now.toISOString()}\n- Topic: ${args.topic.trim()}\n- Audience: ${args.audience}\n\n---\n\n${text}\n`;
 
-  const jsonFile = saveFile(args.out_dir, `${base}.json`, JSON.stringify(
-    {
-      timestamp: now.toISOString(),
-      topic: args.topic.trim(),
-      params: {
-        locale: args.locale,
-        audience: args.audience,
-        goal: args.goal,
-        days: args.days,
-        model: cfg.xai_model,
-        base_url: cfg.xai_base_url,
-        out_dir: args.out_dir,
-      },
-      request: payload,
-      response: resp,
-      extracted_text: text,
-    },
-    null,
-    2,
-  ));
-  const txtFile = saveFile(args.out_dir, `${base}.txt`, text);
   const mdFile = saveFile(args.out_dir, `${base}.md`, md);
 
-  // eslint-disable-next-line no-console
-  console.error(`Saved: ${path.relative(process.cwd(), jsonFile)}`);
-  // eslint-disable-next-line no-console
-  console.error(`Saved: ${path.relative(process.cwd(), txtFile)}`);
   // eslint-disable-next-line no-console
   console.error(`Saved: ${path.relative(process.cwd(), mdFile)}`);
 
