@@ -1,0 +1,4 @@
+interface:
+  display_name: "ファイターズニュース収集"
+  short_description: "北海道日本ハムファイターズの直近ニュースをX上から収集し、今日のダイジェストを作成する"
+  default_prompt: "$fighters-news-scout を使って、直近24時間のファイターズ関連ニュースを収集して（data/fighters-newsに保存）。"

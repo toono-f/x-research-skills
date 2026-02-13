@@ -1,0 +1,4 @@
+interface:
+  display_name: "ファイターズ投稿文生成"
+  short_description: "ファイターズニュースダイジェストからX投稿用の下書きを生成する"
+  default_prompt: "$fighters-post-draft を使って、最新のファイターズニュースから投稿案を生成して（data/fighters-postに保存）。"

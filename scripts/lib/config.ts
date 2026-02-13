@@ -56,3 +56,28 @@ export function resolveXaiConfig(overrides: {
     xai_model: get("XAI_MODEL", overrides.xai_model, DEFAULT_MODEL),
   };
 }
+
+export interface XPostConfig {
+  api_key: string;
+  api_secret: string;
+  access_token: string;
+  access_token_secret: string;
+}
+
+export function resolveXPostConfig(overrides?: {
+  api_key?: string;
+  api_secret?: string;
+  access_token?: string;
+  access_token_secret?: string;
+}): XPostConfig {
+  const dotenv = loadDotenv(path.join(repoRoot(), ".env"));
+  const get = (envKey: string, cli: string | undefined, fallback: string) =>
+    cli || process.env[envKey] || dotenv[envKey] || fallback;
+
+  return {
+    api_key: get("X_API_KEY", overrides?.api_key, ""),
+    api_secret: get("X_API_SECRET", overrides?.api_secret, ""),
+    access_token: get("X_ACCESS_TOKEN", overrides?.access_token, ""),
+    access_token_secret: get("X_ACCESS_TOKEN_SECRET", overrides?.access_token_secret, ""),
+  };
+}
