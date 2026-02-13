@@ -209,9 +209,9 @@ async function main() {
   });
 
   const ts = timestampSlug(now);
-  const base = `${ts}_fighters_news`;
+  const base = `${ts}_ファイターズニュース`;
 
-  const md = `# Fighters News Digest
+  const md = `# ファイターズニュース
 
 ## Meta
 - Timestamp (UTC): ${now.toISOString()}

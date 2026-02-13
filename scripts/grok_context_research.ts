@@ -188,8 +188,8 @@ async function main() {
   });
 
   const ts = timestampSlug(now);
-  const base = `${ts}_${args.locale}_context`;
-  const md = `# Context Pack (${args.locale})\n\n## Meta\n- Timestamp (UTC): ${now.toISOString()}\n- Topic: ${args.topic.trim()}\n- Audience: ${args.audience}\n\n---\n\n${text}\n`;
+  const base = `${ts}_周辺リサーチ_${args.locale}`;
+  const md = `# 周辺リサーチ (${args.locale})\n\n## Meta\n- Timestamp (UTC): ${now.toISOString()}\n- Topic: ${args.topic.trim()}\n- Audience: ${args.audience}\n\n---\n\n${text}\n`;
 
   const jsonFile = saveFile(args.out_dir, `${base}.json`, JSON.stringify(
     {
@@ -212,7 +212,7 @@ async function main() {
     2,
   ));
   const txtFile = saveFile(args.out_dir, `${base}.txt`, text);
-  const mdFile = saveFile(args.out_dir, `${ts}_context.md`, md);
+  const mdFile = saveFile(args.out_dir, `${base}.md`, md);
 
   // eslint-disable-next-line no-console
   console.error(`Saved: ${path.relative(process.cwd(), jsonFile)}`);

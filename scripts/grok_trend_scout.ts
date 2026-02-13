@@ -19,11 +19,10 @@ import { type Json, xaiRequest } from "./lib/xai_client.ts";
 import { timestampSlug, saveFile } from "./lib/file_utils.ts";
 
 const DEFAULT_CATEGORIES = [
-  "AI Coding Tools（Claude Code, Cursor, Copilot, Windsurf, Devin）",
+  "AI Coding Tools（Claude Code, Cursor, Copilot, Windsurf）",
   "AI Agent / MCP / 自動化",
-  "LLM / AIモデル動向（新モデル, ベンチマーク, API価格, 規約変更）",
-  "エンジニアキャリア / 組織 / 働き方",
-  "海外発の新リリース / アナウンス（エンジニアリング関連）",
+  "LLM / AIモデル動向（新モデル, API変更, 価格改定）",
+  "Next.js / React / フロントエンド",
 ];
 
 function parseArgs(argv: string[]) {
@@ -108,40 +107,52 @@ function buildPrompt(input: {
 - 投資助言に見える表現は禁止。
 - 出力に専用タグ（render_inline_citation など）を入れない。URLは素のURLで書く。
 
-対象読者のスタック:
-- TypeScript / Next.js / React（Webフロントエンド）
-- AI Coding Tools（Claude Code, Cursor, Copilot）
-- AI Agent / MCP / LLM API活用
-- Vercel / Supabase / Cloudflare 等のモダンインフラ
+対象読者:
+- TypeScript / Next.js / React でWebアプリを作っている会社員エンジニア
+- Claude Code, Cursor 等のAIコーディングツールを日常的に使っている
+- MCP / AIエージェント / LLM API を使った開発に関心がある
+
+興味がある領域（これだけに絞ること）:
+1. AI Coding Tools: Claude Code, Cursor, GitHub Copilot, Windsurf の新機能・アップデート・使い方
+2. AI Agent / MCP: MCPサーバー、エージェント開発、自動化ワークフロー
+3. LLM 新モデル / API: Claude, GPT, Gemini 等の新モデル、API変更、価格改定
+4. Next.js / React: Next.js, React の新バージョン・新機能
+
+興味がない領域（絶対に含めないこと）:
+- 読者が使わないインフラ/プラットフォーム: Cloudflare Workers AI, Deno Deploy, AWS Lambda 等
+- 読者が使わないフレームワーク: TanStack, Svelte, Vue, Angular, SolidJS 等
+- ハードウェア、ゲーム開発、物理学、セキュリティ脆弱性速報
+- 投資・金融関連
 
 検索戦略（この順番で検索すること）:
 
-ステップ1: 公式アカウント・リリースチャネルを直接検索
+ステップ1: AIコーディングツール公式
 以下のアカウント/キーワードで直近${input.hours}時間のポストを検索する:
-- @AnthropicAI, @cursor_ai, @GitHubCopilot, @OpenAI, @GoogleDeepMind
-- @veraborners (Cursor), @windaborners (Windsurf)
-- @vercel, @supabase, @nextjs, @CloudflareDev
-- "Claude Code release", "Cursor update", "Copilot changelog"
-- "MCP server", "Model Context Protocol"
-- "Next.js release", "Vercel changelog", "Supabase release"
+- @AnthropicAI, @claudescode, "Claude Code"
+- @cursor_ai, "Cursor update", "Cursor changelog"
+- @GitHubCopilot, "Copilot"
+- @OpenAI, "ChatGPT", "GPT-5", "GPT-4o"
+- @GoogleDeepMind, "Gemini"
 
-ステップ2: 技術キーワードで検索
-- "breaking change", "new release", "v0.", "v1.", "changelog", "migration guide"
-- "benchmark", "comparison", "実装してみた", "移行した", "乗り換えた"
-- "Claude Code", "Cursor", "Copilot", "MCP", "AI agent"
-- エンジニア界隈で広く議論されている技術トピック
+ステップ2: MCP / AIエージェント
+- "MCP server", "Model Context Protocol", "MCP tool"
+- "AI agent", "AIエージェント", "agent framework"
+- "Claude Code agent", "Cursor agent mode"
 
-ステップ3: 日本語エンジニアコミュニティの注目動向
-- Zenn/Qiitaのトレンド記事への言及
-- 技術カンファレンス・イベントの発表
-- エンジニアの間で広く共有されている実践知見
+ステップ3: Next.js / React
+- @nextjs, "Next.js", "React"
+- "App Router", "Server Components", "Server Actions"
 
-選定基準:
-- 重要度で判断する。カテゴリを均等に埋める必要はない。
-- 対象読者のスタックに関連するものだけ採用。ハードウェア、ゲーム、物理学等は除外。
-- 一次情報（公式ドキュメント/GitHub/リリースノート/Changelog）が確認できるものだけ採用。
-- ニッチなマイナーツールのパッチリリースより、メジャーツールの変更を優先。
+ステップ4: 日本語エンジニアコミュニティ
+- 上記テーマに関するZenn/Qiitaトレンド記事への言及
+- 「Claude Code 使ってみた」「Cursor 移行した」「MCP 作った」系の実体験ポスト
+
+選定基準（すべて満たすこと）:
+- 【最重要】読者が実際に使う・使いそうな技術か？ Claude Code, Cursor, MCP, Next.js, React, LLM API に関連するもののみ。
+- 一次情報（公式ドキュメント/GitHub/リリースノート/Changelog）が確認できるか？
+- 読者が「知っておくべき」「試してみたい」と思えるレベルの変更か？
 - 該当トピックが少ない場合は「静かな期間」と正直に書く。水増ししない。
+- 迷ったら除外する。5個の的確なトピックは15個の曖昧なトピックより価値がある。
 
 やること:
 1) 上記の検索戦略に従って x_search で情報収集する
@@ -159,7 +170,7 @@ function buildPrompt(input: {
 （重要度順に並べる。カテゴリごとに分けず、フラットに重要度順。）
 
 ### 1. [何が起きたか（1行）]
-- カテゴリ: AI Coding Tools / AI Agent・MCP / LLM / Web開発 / インフラ / キャリア
+- カテゴリ: AI Coding Tools / AI Agent・MCP / LLM / Next.js・React
 - 重要度: 高 / 中
 - 何が変わったか: （技術的な変更点・新機能・仕様を具体的に）
 - エンジニアへの影響: （実務で何が変わるか、何に注意すべきか）
@@ -223,9 +234,9 @@ async function main() {
   });
 
   const ts = timestampSlug(now);
-  const base = `${ts}_${args.locale}_trends`;
+  const base = `${ts}_トレンド検知_${args.locale}`;
 
-  const md = `# Trend Scout (${args.locale})
+  const md = `# トレンド検知 (${args.locale})
 
 ## Meta
 - Timestamp (UTC): ${now.toISOString()}
@@ -258,7 +269,7 @@ ${text}
     2,
   ));
   const txtFile = saveFile(args.out_dir, `${base}.txt`, text);
-  const mdFile = saveFile(args.out_dir, `${ts}_trends.md`, md);
+  const mdFile = saveFile(args.out_dir, `${base}.md`, md);
 
   // eslint-disable-next-line no-console
   console.error(`Saved: ${path.relative(process.cwd(), jsonFile)}`);

@@ -223,9 +223,9 @@ async function main() {
 
   const ts = timestampSlug(now);
   const slug = topicSlug(args.topic.trim());
-  const base = `${ts}_${args.locale}_${slug}`;
+  const base = `${ts}_深掘り_${slug}`;
 
-  const md = `# Deep Research: ${args.topic.trim()}
+  const md = `# 深掘りリサーチ: ${args.topic.trim()}
 
 ## Meta
 - Timestamp (UTC): ${now.toISOString()}
@@ -238,7 +238,7 @@ async function main() {
 ${text}
 `;
 
-  const jsonFile = saveFile(args.out_dir, `${base}_research.json`, JSON.stringify(
+  const jsonFile = saveFile(args.out_dir, `${base}.json`, JSON.stringify(
     {
       timestamp: now.toISOString(),
       topic: args.topic.trim(),
@@ -256,8 +256,8 @@ ${text}
     null,
     2,
   ));
-  const txtFile = saveFile(args.out_dir, `${base}_research.txt`, text);
-  const mdFile = saveFile(args.out_dir, `${ts}_${slug}_research.md`, md);
+  const txtFile = saveFile(args.out_dir, `${base}.txt`, text);
+  const mdFile = saveFile(args.out_dir, `${base}.md`, md);
 
   // eslint-disable-next-line no-console
   console.error(`Saved: ${path.relative(process.cwd(), jsonFile)}`);

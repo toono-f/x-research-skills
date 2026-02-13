@@ -265,9 +265,9 @@ async function main() {
   });
 
   const ts = timestampSlug(now);
-  const base = `${ts}_fighters_post`;
+  const base = `${ts}_ファイターズ投稿案`;
 
-  const md = `# Fighters Post Draft
+  const md = `# ファイターズ投稿案
 
 ## Meta
 - Timestamp (UTC): ${now.toISOString()}
