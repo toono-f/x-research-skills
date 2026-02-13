@@ -33,8 +33,9 @@ zenn-cli 互換のフロントマター付き markdown で出力し、そのま�
 
 1. Deep Research レポート: `data/deep-research/*_research.md`
 2. 発信者プロフィール: `skills/x-post-draft/references/profile.md`（x-post-draft と共有）
-3. （任意）ユーザーからの追加コンテキスト（実体験、感想、使いたいコード例）
-4. （任意）X投稿ドラフト: `data/post-draft/*_draft.md`（あれば切り口の参考にする）
+3. 文体ガイド: `skills/x-article-draft/references/writing-style.md`（**必ず参照**）
+4. （任意）ユーザーからの追加コンテキスト（実体験、感想、使いたいコード例）
+5. （任意）X投稿ドラフト: `data/post-draft/*_draft.md`（あれば切り口の参考にする）
 
 ## Workflow
 
@@ -42,8 +43,10 @@ zenn-cli 互換のフロントマター付き markdown で出力し、そのま�
    - 指定された deep-research レポートを読む
    - テーマ、ファクト、賛否、空白地帯を把握する
 
-2. **プロフィール参照**
-   - `skills/x-post-draft/references/profile.md` を読み、発信者の立場・トンマナ・NGを確認する
+2. **プロフィール・文体ガイド参照**
+   - `skills/x-post-draft/references/profile.md` を読み、発信者の立場・NGを確認する
+   - `skills/x-article-draft/references/writing-style.md` を読み、文体ルールを確認する
+   - 記事全体をこの文体ガイドに合わせて書く（一人称、文末表現、導入の書き方、トーン等）
 
 3. **切り口の決定**
    - ユーザーに切り口を確認する
@@ -151,7 +154,7 @@ published: false
 - 見出し: 3〜5個（スクロールで構造がわかる）
 - コード: ある場合は動作する最小例（コピペで試せる）
 - 出典: ファクトには必ずURLまたは「As of」付き
-- トンマナ: profile.md に準拠（わかりやすく親しみやすい）
+- 文体: `writing-style.md` に準拠（一人称「自分/わたし」、です/ます+口語混じり、絵文字あり、親友に勧めるトーン）
 
 ## Hand-off
 
