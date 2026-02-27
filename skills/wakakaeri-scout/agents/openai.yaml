@@ -1,0 +1,4 @@
+interface:
+  display_name: "若返りトレンド検知"
+  short_description: "直近48時間の若返り・アンチエイジング領域トレンドを検知し、話題のテーマを把握する"
+  default_prompt: "$wakakaeri-scout を使って、直近48時間の若返り・アンチエイジング領域トレンドを取得して（data/wakakaeri-scoutに保存）。"

@@ -1,0 +1,4 @@
+interface:
+  display_name: "若返りnote記事作成"
+  short_description: "deep-researchの結果を元にnote投稿用の若返り・アンチエイジング記事ドラフトを生成する"
+  default_prompt: "$wakakaeri-article-draft を使って、最新のdeep-research結果からnote向けの若返り記事ドラフトを生成して（data/article-draftに保存）。"

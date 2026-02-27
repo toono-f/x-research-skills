@@ -1,0 +1,4 @@
+interface:
+  display_name: "若返り投稿文生成"
+  short_description: "若返りトレンド検知結果からX投稿案とnote記事概要を生成する"
+  default_prompt: "$wakakaeri-post-draft を使って、最新の若返りトレンド情報から投稿案を生成して（data/wakakaeri-postに保存）。"
